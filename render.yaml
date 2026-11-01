@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: localkart-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run db:generate && npm run build -w @localkart/api
+    startCommand: npm run start -w @localkart/api
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PICKUP_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ENABLE_SIMULATED_PAYMENTS
+        value: "false"

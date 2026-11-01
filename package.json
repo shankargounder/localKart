@@ -1,0 +1,44 @@
+{
+  "name": "localkart",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w @localkart/api",
+    "dev:admin": "npm run dev -w @localkart/admin",
+    "dev:customer": "npm run start -w @localkart/customer",
+    "dev:merchant": "npm run start -w @localkart/merchant",
+    "db:generate": "npm run db:generate -w @localkart/api",
+    "db:migrate": "npm run db:migrate -w @localkart/api",
+    "db:seed": "npm run db:seed -w @localkart/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test -w @localkart/api",
+    "build": "npm run build -w @localkart/api && npm run build -w @localkart/admin",
+    "lint": "eslint .",
+    "test:integration": "node scripts/integration.mjs",
+    "db:local": "node scripts/local-postgres.mjs",
+    "docs:api": "tsx scripts/generate-openapi.ts",
+    "format": "prettier --write --ignore-path .gitignore apps packages services scripts database/seeds docs README.md package.json eslint.config.mjs docker-compose.yml render.yaml tsconfig.base.json",
+    "test:e2e": "playwright test --config tests/e2e/playwright.config.ts",
+    "db:seed-images": "npm run db:seed-images -w @localkart/api",
+    "demo:check": "node scripts/demo-check.mjs",
+    "supabase:check": "node scripts/supabase-check.mjs",
+    "supabase:setup": "node scripts/supabase-check.mjs --create-bucket"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@playwright/test": "^1.64.1",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "eslint": "^9.39.0",
+    "node": "^22.23.4",
+    "prettier": "^3.9.10",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.46.0"
+  },
+  "engines": {
+    "node": ">=22.14.0"
+  }
+}

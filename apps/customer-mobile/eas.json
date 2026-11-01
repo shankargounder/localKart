@@ -1,0 +1,38 @@
+{
+  "cli": {
+    "version": ">=16.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "node": "22.23.4"
+    },
+    "preview-local": {
+      "extends": "preview",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://192.168.1.38:4000/api/v1",
+        "LOCALKART_ALLOW_HTTP": "true"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle"
+      }
+    },
+    "demo": {
+      "extends": "preview",
+      "environment": "preview",
+      "env": {
+        "LOCALKART_DEMO_BUILD": "true",
+        "LOCALKART_TEST_DEVICE": "true"
+      }
+    }
+  }
+}

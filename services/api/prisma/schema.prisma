@@ -1,0 +1,518 @@
+generator client {
+ provider = "prisma-client-js"
+}
+datasource db {
+ provider = "postgresql"
+ url = env("DATABASE_URL")
+}
+model User {
+ id String @id @default(uuid()) @db.Uuid
+ email String @unique
+ name String
+ passwordHash String
+ role String @default("CUSTOMER")
+ suspended Boolean @default(false)
+ createdAt DateTime @default(now())
+ shops Shop[]
+ orders Order[]
+ sessions Session[]
+ notifications Notification[]
+ cartItems CartItem[]
+ resets PasswordReset[]
+ devices DeviceToken[]
+ addresses Address[]
+ favorites Favorite[]
+ lists ShoppingList[]
+ wishlist WishlistItem[]
+ reviews Review[]
+ tickets SupportTicket[]
+ notificationPreferences Json @default("{}")
+ pushPreferences NotificationPreference?
+}
+model Session {
+ id String @id @default(uuid()) @db.Uuid
+ tokenHash String @unique
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ expiresAt DateTime
+ revokedAt DateTime?
+}
+model PasswordReset {
+ id String @id @default(uuid()) @db.Uuid
+ tokenHash String @unique
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ expiresAt DateTime
+ usedAt DateTime?
+}
+model Category {
+ id String @id @default(uuid()) @db.Uuid
+ name String @unique
+ shops Shop[]
+ products Product[]
+ parentId String? @db.Uuid
+ parent Category? @relation("CategoryTree",fields:[parentId],references:[id])
+ children Category[] @relation("CategoryTree")
+ restricted Boolean @default(false)
+}
+model Shop {
+ id String @id @default(uuid()) @db.Uuid
+ ownerId String @db.Uuid
+ owner User @relation(fields:[ownerId],references:[id])
+ name String
+ description String @default("")
+ categoryId String @db.Uuid
+ category Category @relation(fields:[categoryId],references:[id])
+ address String
+ phone String @default("")
+ latitude Float
+ longitude Float
+ approval String @default("PENDING")
+ open Boolean @default(true)
+ acceptingOrders Boolean @default(true)
+ holidayMode Boolean @default(false)
+ preparationMinutes Int @default(20)
+ createdAt DateTime @default(now())
+ hours ShopHour[]
+ products Product[]
+ orders Order[]
+ deliveryEnabled Boolean @default(false)
+ codEnabled Boolean @default(false)
+ deliveryRadiusKm Float @default(5)
+ pickupInstructions String @default("Bring your order code to the shop.")
+ favorites Favorite[]
+ offlineSales OfflineSale[]
+ @@index([approval,latitude,longitude])
+ @@index([ownerId])
+}
+model ShopHour {
+ id String @id @default(uuid()) @db.Uuid
+ shopId String @db.Uuid
+ shop Shop @relation(fields:[shopId],references:[id])
+ day Int
+ opens String
+ closes String
+ @@unique([shopId,day])
+}
+model Product {
+ id String @id @default(uuid()) @db.Uuid
+ shopId String @db.Uuid
+ shop Shop @relation(fields:[shopId],references:[id])
+ categoryId String @db.Uuid
+ category Category @relation(fields:[categoryId],references:[id])
+ name String
+ description String
+ unit String
+ brand String @default("")
+ sku String?
+ keywords String @default("")
+ specifications Json @default("{}")
+ freshnessInstructions String @default("")
+ wishlist WishlistItem[]
+ reviews Review[]
+ active Boolean @default(true)
+ discloseStock Boolean @default(false)
+ createdAt DateTime @default(now())
+ variants Variant[]
+ images ProductImage[]
+ @@index([shopId,active])
+}
+model ProductImage {
+ id String @id @default(uuid()) @db.Uuid
+ productId String @db.Uuid
+ product Product @relation(fields:[productId],references:[id])
+ url String
+ alt String @default("")
+ source String @default("MERCHANT")
+ sourceUrl String?
+ license String?
+ credit String?
+ width Int?
+ height Int?
+ contentHash String?
+ isDemo Boolean @default(false)
+ createdAt DateTime @default(now())
+ @@unique([productId,contentHash])
+}
+model Variant {
+ id String @id @default(uuid()) @db.Uuid
+ productId String @db.Uuid
+ product Product @relation(fields:[productId],references:[id])
+ label String
+ pricePaise Int
+ inventory Inventory?
+ reservations Reservation[]
+ movements InventoryMovement[]
+ cartItems CartItem[]
+}
+model Inventory {
+ variantId String @id @db.Uuid
+ variant Variant @relation(fields:[variantId],references:[id])
+ onHand Int
+ reserved Int @default(0)
+ lowStock Int @default(2000)
+}
+model InventoryMovement {
+ id String @id @default(uuid()) @db.Uuid
+ variantId String @db.Uuid
+ variant Variant @relation(fields:[variantId],references:[id])
+ orderId String? @db.Uuid
+ onHandDelta Int
+ reservedDelta Int
+ reason String
+ actorId String @db.Uuid
+ createdAt DateTime @default(now())
+ @@index([variantId,createdAt])
+}
+model Reservation {
+ id String @id @default(uuid()) @db.Uuid
+ orderId String @db.Uuid
+ order Order @relation(fields:[orderId],references:[id])
+ variantId String @db.Uuid
+ variant Variant @relation(fields:[variantId],references:[id])
+ quantity Int
+ releasedAt DateTime?
+ @@unique([orderId,variantId])
+}
+model CartItem {
+ id String @id @default(uuid()) @db.Uuid
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ variantId String @db.Uuid
+ variant Variant @relation(fields:[variantId],references:[id])
+ quantity Int
+ @@unique([userId,variantId])
+}
+model Order {
+ id String @id @default(uuid()) @db.Uuid
+ customerId String @db.Uuid
+ customer User @relation(fields:[customerId],references:[id])
+ shopId String @db.Uuid
+ shop Shop @relation(fields:[shopId],references:[id])
+ idempotencyKey String
+ requestHash String
+ status String @default("PENDING_ACCEPTANCE")
+ totalPaise Int
+ pickupHash String?
+ pickupNonce String?
+ pickupAttempts Int @default(0)
+ completedAt DateTime?
+ createdAt DateTime @default(now())
+ expiresAt DateTime
+ items OrderItem[]
+ history OrderHistory[]
+ reservations Reservation[]
+ payment Payment?
+ fulfillmentType String @default("PICKUP")
+ merchandisePaise Int @default(0)
+ deliveryFeePaise Int @default(0)
+ platformFeePaise Int @default(0)
+ merchantPayablePaise Int @default(0)
+ commissionBps Int @default(0)
+ delivery Delivery?
+ refunds Refund[]
+ reviews Review[]
+ packingPreferences String @default("")
+ acceptedAt DateTime?
+ preparationStartedAt DateTime?
+ preparationDurationMinutes Int?
+ estimatedReadyAt DateTime?
+ etaUpdatedAt DateTime?
+ readyAt DateTime?
+ version Int @default(0)
+ @@unique([customerId,idempotencyKey])
+ @@index([shopId,status])
+ @@index([status,expiresAt])
+}
+model OrderItem {
+ id String @id @default(uuid()) @db.Uuid
+ orderId String @db.Uuid
+ order Order @relation(fields:[orderId],references:[id])
+ variantId String @db.Uuid
+ name String
+ description String
+ unit String
+ quantity Int
+ pricePaise Int
+ totalPaise Int
+ imageUrl String?
+ imageAlt String?
+}
+model OrderHistory {
+ id String @id @default(uuid()) @db.Uuid
+ orderId String @db.Uuid
+ order Order @relation(fields:[orderId],references:[id])
+ status String
+ reason String?
+ createdAt DateTime @default(now())
+}
+model Payment {
+ id String @id @default(uuid()) @db.Uuid
+ orderId String @unique @db.Uuid
+ order Order @relation(fields:[orderId],references:[id])
+ method String
+ status String @default("UNPAID")
+ amountPaise Int
+ events PaymentEvent[]
+}
+model PaymentEvent {
+ id String @id @default(uuid()) @db.Uuid
+ providerEventId String @unique
+ paymentId String @db.Uuid
+ payment Payment @relation(fields:[paymentId],references:[id])
+ createdAt DateTime @default(now())
+}
+model Notification {
+ id String @id @default(uuid()) @db.Uuid
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ title String
+ body String
+ orderId String? @db.Uuid
+ read Boolean @default(false)
+ createdAt DateTime @default(now())
+ eventId String? @unique
+ type String @default("LEGACY")
+ readAt DateTime?
+ outbox NotificationOutbox?
+ deliveries NotificationDelivery[]
+ attempts NotificationDeliveryAttempt[]
+ @@index([userId,read,createdAt])
+}
+model DeviceToken {
+ id String @id @default(uuid()) @db.Uuid
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ token String @unique
+ deviceId String @default(uuid())
+ platform String @default("android")
+ projectId String?
+ shopId String? @db.Uuid
+ enabled Boolean @default(true)
+ isTestDevice Boolean @default(false)
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ deliveries NotificationDelivery[]
+ @@unique([userId,deviceId])
+}
+model NotificationPreference {
+ userId String @id @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ orderUpdates Boolean @default(true)
+ lowStock Boolean @default(true)
+ soundEnabled Boolean @default(true)
+ updatedAt DateTime @updatedAt
+}
+model NotificationOutbox {
+ id String @id @default(uuid()) @db.Uuid
+ notificationId String @unique @db.Uuid
+ notification Notification @relation(fields:[notificationId],references:[id])
+ status String @default("PENDING")
+ createdAt DateTime @default(now())
+ processedAt DateTime?
+ @@index([status,createdAt])
+}
+model NotificationDelivery {
+ id String @id @default(uuid()) @db.Uuid
+ notificationId String @db.Uuid
+ notification Notification @relation(fields:[notificationId],references:[id])
+ deviceTokenId String @db.Uuid
+ device DeviceToken @relation(fields:[deviceTokenId],references:[id])
+ status String @default("PENDING")
+ attemptCount Int @default(0)
+ nextAttemptAt DateTime @default(now())
+ leaseUntil DateTime?
+ providerTicketId String?
+ receiptStatus String?
+ errorCode String?
+ errorMessage String?
+ attempts NotificationDeliveryAttempt[]
+ createdAt DateTime @default(now())
+ @@unique([notificationId,deviceTokenId])
+ @@index([status,nextAttemptAt])
+}
+model NotificationDeliveryAttempt {
+ id String @id @default(uuid()) @db.Uuid
+ deliveryId String @db.Uuid
+ delivery NotificationDelivery @relation(fields:[deliveryId],references:[id])
+ notificationId String @db.Uuid
+ notification Notification @relation(fields:[notificationId],references:[id])
+ attemptCount Int
+ attemptedAt DateTime @default(now())
+ providerTicketId String?
+ providerReceiptStatus String?
+ errorCode String?
+ errorMessage String?
+ @@unique([deliveryId,attemptCount])
+}
+model RealtimeEvent {
+ id BigInt @id @default(autoincrement())
+ eventId String @unique
+ orderId String @db.Uuid
+ type String
+ version Int
+ requestHash String?
+ createdAt DateTime @default(now())
+ @@index([orderId,id])
+}
+model AuditLog {
+ id String @id @default(uuid()) @db.Uuid
+ actorId String @db.Uuid
+ action String
+ targetId String
+ createdAt DateTime @default(now())
+}
+model Address {
+ id String @id @default(uuid()) @db.Uuid
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ label String
+ recipient String
+ phone String
+ line1 String
+ locality String
+ postalCode String
+ latitude Float
+ longitude Float
+ archived Boolean @default(false)
+ createdAt DateTime @default(now())
+ @@index([userId,archived])
+}
+model DeliveryQuote {
+ id String @id @default(uuid()) @db.Uuid
+ customerId String @db.Uuid
+ shopId String @db.Uuid
+ addressId String @db.Uuid
+ addressSnapshot Json
+ provider String
+ feePaise Int
+ distanceKm Float
+ expiresAt DateTime
+ consumedAt DateTime?
+ delivery Delivery?
+}
+model Delivery {
+ id String @id @default(uuid()) @db.Uuid
+ orderId String @unique @db.Uuid
+ order Order @relation(fields:[orderId],references:[id])
+ quoteId String @unique @db.Uuid
+ quote DeliveryQuote @relation(fields:[quoteId],references:[id])
+ provider String
+ addressSnapshot Json
+ status String @default("UNBOOKED")
+ riderName String?
+ trackingReference String?
+ proofReference String?
+ returnedAt DateTime?
+ createdAt DateTime @default(now())
+ events DeliveryEvent[]
+}
+model DeliveryEvent {
+ id String @id @default(uuid()) @db.Uuid
+ deliveryId String @db.Uuid
+ delivery Delivery @relation(fields:[deliveryId],references:[id])
+ eventId String @unique
+ requestHash String
+ status String
+ actorId String @db.Uuid
+ note String?
+ createdAt DateTime @default(now())
+}
+model OfflineSale {
+ id String @id @default(uuid()) @db.Uuid
+ shopId String @db.Uuid
+ shop Shop @relation(fields:[shopId],references:[id])
+ actorId String @db.Uuid
+ idempotencyKey String
+ requestHash String
+ totalPaise Int
+ paymentMethod String
+ createdAt DateTime @default(now())
+ items OfflineSaleItem[]
+ @@unique([shopId,idempotencyKey])
+ @@index([shopId,createdAt])
+}
+model OfflineSaleItem {
+ id String @id @default(uuid()) @db.Uuid
+ saleId String @db.Uuid
+ sale OfflineSale @relation(fields:[saleId],references:[id])
+ variantId String @db.Uuid
+ name String
+ unit String
+ quantity Int
+ pricePaise Int
+ totalPaise Int
+}
+model CommissionRule {
+ id String @id @default(uuid()) @db.Uuid
+ shopId String? @db.Uuid
+ categoryId String? @db.Uuid
+ basisPoints Int
+ minimumFeePaise Int @default(0)
+ waived Boolean @default(false)
+ active Boolean @default(true)
+ createdAt DateTime @default(now())
+ @@index([shopId,categoryId,active])
+}
+model Refund {
+ id String @id @default(uuid()) @db.Uuid
+ orderId String @db.Uuid
+ order Order @relation(fields:[orderId],references:[id])
+ customerId String @db.Uuid
+ amountPaise Int
+ reason String
+ status String @default("REQUESTED")
+ resolution String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Favorite {
+ userId String @db.Uuid
+ shopId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ shop Shop @relation(fields:[shopId],references:[id])
+ createdAt DateTime @default(now())
+ @@id([userId,shopId])
+}
+model WishlistItem {
+ userId String @db.Uuid
+ productId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ product Product @relation(fields:[productId],references:[id])
+ @@id([userId,productId])
+}
+model ShoppingList {
+ id String @id @default(uuid()) @db.Uuid
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ name String
+ items Json
+ createdAt DateTime @default(now())
+ @@index([userId])
+}
+model Review {
+ id String @id @default(uuid()) @db.Uuid
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ productId String @db.Uuid
+ product Product @relation(fields:[productId],references:[id])
+ orderId String @db.Uuid
+ order Order @relation(fields:[orderId],references:[id])
+ rating Int
+ body String
+ createdAt DateTime @default(now())
+ @@unique([userId,productId,orderId])
+}
+model SupportTicket {
+ id String @id @default(uuid()) @db.Uuid
+ userId String @db.Uuid
+ user User @relation(fields:[userId],references:[id])
+ orderId String? @db.Uuid
+ subject String
+ body String
+ status String @default("OPEN")
+ resolution String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([userId,status])
+}

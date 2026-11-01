@@ -1,0 +1,65 @@
+# Review this staging blueprint before provisioning. The starter web plan is paid.
+# This file does not create an environment until deployed through a hosting account.
+services:
+  - type: web
+    name: localkart-staging-api
+    runtime: node
+    plan: starter
+    numInstances: 1
+    buildCommand: npm ci && npm run db:generate && npm run build -w @localkart/api
+    preDeployCommand: npm run db:migrate
+    startCommand: npm run start -w @localkart/api
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22.23.4
+      - key: DATABASE_URL
+        sync: false
+      - key: MIGRATION_DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PICKUP_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ENABLE_EXPO_PUSH
+        value: "true"
+      - key: EXPO_CUSTOMER_PROJECT_ID
+        sync: false
+      - key: EXPO_MERCHANT_PROJECT_ID
+        sync: false
+      - key: EXPO_ACCESS_TOKEN
+        sync: false
+      - key: ENABLE_SIMULATED_PAYMENTS
+        value: "false"
+      - key: ENABLE_MANUAL_DELIVERY
+        value: "false"
+      - key: BARCODE_CATALOG_PROVIDER
+        value: none
+      - key: UPLOAD_DRIVER
+        value: supabase
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: SUPABASE_STORAGE_BUCKET
+        value: product-images
+  - type: web
+    name: localkart-staging-admin
+    runtime: static
+    buildCommand: npm ci && npm run build -w @localkart/admin
+    staticPublishPath: apps/admin-web/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: 22.23.4
+      - key: VITE_API_URL
+        sync: false
+      - key: LOCALKART_DEMO_BUILD
+        value: "true"

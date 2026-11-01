@@ -1,0 +1,5034 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "LocalKart V2 API",
+    "version": "0.2.0",
+    "description": "Money is integer INR paise; quantities are thousandths of the displayed unit. Delivery and payment simulations are explicitly labelled. Domain details and non-schema request bodies are documented in docs/api-reference.md."
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "paths": {
+    "/merchant/shops/{id}/barcodes/{barcode}": {
+      "get": {
+        "summary": "Owned retail barcode lookup; optional food metadata and manual fallback",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "barcode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/time": {
+      "get": {
+        "summary": "Server clock for persisted ETA countdowns",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/devices/push-token": {
+      "post": {
+        "summary": "Register or rotate an owned Expo device token",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Disable an owned device push registration",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/notifications/unread-count": {
+      "get": {
+        "summary": "Owned unread and new-order counts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/notifications/read-all": {
+      "patch": {
+        "summary": "Mark owned notifications read",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/notifications/{id}/read": {
+      "patch": {
+        "summary": "Mark one owned notification read",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/notifications/preferences": {
+      "get": {
+        "summary": "Push and sound preferences",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update push and sound preferences",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/orders/{id}/timeline": {
+      "get": {
+        "summary": "Authorized persisted order timeline",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/orders/{id}/notifications/read": {
+      "patch": {
+        "summary": "Mark owned linked notifications read",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/orders/{id}/estimated-ready-time": {
+      "patch": {
+        "summary": "Idempotent confirmed preparation ETA update",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/products/{id}/images": {
+      "post": {
+        "summary": "Owned multipart licensed photograph upload",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/notifications": {
+      "get": {
+        "summary": "Redacted queue, attempt and receipt monitor",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/notification-test-devices": {
+      "get": {
+        "summary": "Opted-in test devices without tokens",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/notifications/test": {
+      "post": {
+        "summary": "Queue a fixed test for one opted-in device",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Database readiness",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Register customer or merchant",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Log in",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Rotate refresh token",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Revoke refresh token",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "summary": "Request password reset",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "summary": "Reset password",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "List configurable categories",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/shops/nearby": {
+      "get": {
+        "summary": "Nearby approved shops",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/shops/{id}": {
+      "get": {
+        "summary": "Public shop details",
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/shops/{id}/products": {
+      "get": {
+        "summary": "Shop catalogue",
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/products/search": {
+      "get": {
+        "summary": "Legacy product lookup",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Public product details",
+        "security": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/discovery/search": {
+      "get": {
+        "summary": "Full-text smart radius search",
+        "security": [],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "lng",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Omit for 1→2→5→10 km; manual 1,2,5,10,15,25"
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "available",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/discovery/suggestions": {
+      "get": {
+        "summary": "Search suggestions",
+        "security": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "summary": "Current user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Edit current user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/users/notification-preferences": {
+      "patch": {
+        "summary": "Notification preferences",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/features": {
+      "get": {
+        "summary": "Disabled and enabled feature gates",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "summary": "All shop carts; optional shopId filter",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/cart/items": {
+      "post": {
+        "summary": "Add or replace item quantity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/cart/items/{id}": {
+      "patch": {
+        "summary": "Update owned quantity",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove owned item",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "summary": "Create idempotent order",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderInput"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Role-scoped orders",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "summary": "Authorized order details",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/orders/{id}/cancel": {
+      "post": {
+        "summary": "Cancel eligible order",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/payments/create": {
+      "post": {
+        "summary": "Explicit development simulation after stock reservation",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/payments/webhook": {
+      "post": {
+        "summary": "503 until an online provider is implemented",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/addresses": {
+      "get": {
+        "summary": "Private address book",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "post": {
+        "summary": "Save address",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddressInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/addresses/{id}": {
+      "delete": {
+        "summary": "Archive owned address",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/favorites": {
+      "get": {
+        "summary": "Favorite shops",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/favorites/{id}": {
+      "put": {
+        "summary": "Favorite approved shop",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove favorite",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/wishlist": {
+      "get": {
+        "summary": "Product wishlist",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/wishlist/{id}": {
+      "put": {
+        "summary": "Save product",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove product",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/shopping-lists": {
+      "get": {
+        "summary": "Saved shopping lists",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "post": {
+        "summary": "Save manual shopping list",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/shopping-lists/{id}": {
+      "patch": {
+        "summary": "Edit owned shopping list",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/orders/{id}/reorder": {
+      "post": {
+        "summary": "Reorder at current availability into a shop cart",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/reviews": {
+      "post": {
+        "summary": "Verified-purchase review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "get": {
+        "summary": "Own reviews",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/customers/refunds": {
+      "get": {
+        "summary": "Own refund requests",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "post": {
+        "summary": "Request refund review",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/delivery/quotes": {
+      "post": {
+        "summary": "Serviceability and expiring bound quote",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/delivery/events": {
+      "post": {
+        "summary": "Admin-audited idempotent pilot event; delivery proof required",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/delivery/{id}/status": {
+      "get": {
+        "summary": "Role-scoped delivery status",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/delivery/webhook": {
+      "post": {
+        "summary": "503; no unsigned external callback accepted",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/support/tickets": {
+      "get": {
+        "summary": "Role-scoped support tickets",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create support ticket",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/shops": {
+      "get": {
+        "summary": "Owned shops",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "post": {
+        "summary": "Merchant onboarding",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/shops/{id}": {
+      "patch": {
+        "summary": "Owned shop settings",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/shops/{id}/hours": {
+      "put": {
+        "summary": "Replace owned weekly hours",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/products": {
+      "get": {
+        "summary": "Owned catalogue",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/shops/{id}/products": {
+      "post": {
+        "summary": "Create stock-tracked product",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductInput"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/merchant/products/{id}": {
+      "patch": {
+        "summary": "Edit or archive owned product",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/products/{id}/variants": {
+      "post": {
+        "summary": "Add stocked variant",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/variants/{id}": {
+      "patch": {
+        "summary": "Daily price and threshold changes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/inventory": {
+      "get": {
+        "summary": "Owned inventory",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/inventory/movements": {
+      "get": {
+        "summary": "Immutable movement history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/inventory/adjustments": {
+      "post": {
+        "summary": "Record stock adjustment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/offline-sales": {
+      "post": {
+        "summary": "Idempotent in-store billing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfflineSaleInput"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Owned offline sales",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/dashboard": {
+      "get": {
+        "summary": "India business-day dashboard",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/reports": {
+      "get": {
+        "summary": "Online/offline report",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/reports.csv": {
+      "get": {
+        "summary": "Offline sale CSV export",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/orders/{id}/accept": {
+      "post": {
+        "summary": "Owned order action: accept",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/orders/{id}/reject": {
+      "post": {
+        "summary": "Owned order action: reject",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/orders/{id}/preparing": {
+      "post": {
+        "summary": "Owned order action: preparing",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/orders/{id}/ready": {
+      "post": {
+        "summary": "Owned order action: ready",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/orders/{id}/complete": {
+      "post": {
+        "summary": "Owned order action: complete",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/merchant/orders/{id}/cancel": {
+      "post": {
+        "summary": "Owned order action: cancel",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "summary": "Owned database notifications",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/notifications/devices": {
+      "post": {
+        "summary": "Register Expo device token",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/dashboard": {
+      "get": {
+        "summary": "Legacy marketplace counts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/analytics": {
+      "get": {
+        "summary": "GMV, fees, refunds and daily series",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/shops": {
+      "get": {
+        "summary": "Inspect shops",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/shops/pending": {
+      "get": {
+        "summary": "Approval queue",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/shops/{id}/approve": {
+      "post": {
+        "summary": "Audited shop approve",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/shops/{id}/reject": {
+      "post": {
+        "summary": "Audited shop reject",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/shops/{id}/suspend": {
+      "post": {
+        "summary": "Audited shop suspend",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "summary": "Inspect users",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/users/{id}": {
+      "patch": {
+        "summary": "Suspend/reactivate non-admin",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/categories": {
+      "post": {
+        "summary": "Create category",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/categories/{id}": {
+      "patch": {
+        "summary": "Hierarchy and restricted flag",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/products": {
+      "get": {
+        "summary": "Moderation catalogue",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/products/{id}": {
+      "patch": {
+        "summary": "Hide or restore product",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/inventory-anomalies": {
+      "get": {
+        "summary": "Inventory invariant violations",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/deliveries": {
+      "get": {
+        "summary": "Pilot delivery monitor and events",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/commissions": {
+      "get": {
+        "summary": "Commission rule history",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create future-order commission rule",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/support/{id}": {
+      "patch": {
+        "summary": "Audited support resolution",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/refunds": {
+      "get": {
+        "summary": "Inspect refunds",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/refunds/{id}": {
+      "patch": {
+        "summary": "Approve/reject or confirm actual manual reimbursement",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    },
+    "/admin/audit": {
+      "get": {
+        "summary": "Administrative audit log",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success; some mutations return 201 Created or 204 No Content"
+          },
+          "201": {
+            "description": "Record created"
+          },
+          "204": {
+            "description": "Mutation completed"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Role or ownership denied"
+          },
+          "409": {
+            "description": "State, stock, quote or idempotency conflict"
+          },
+          "429": {
+            "description": "Request or verification attempt limit"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "AddressInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50
+          },
+          "recipient": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^[+\\d\\s-]{7,20}$"
+          },
+          "line1": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300
+          },
+          "locality": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "postalCode": {
+            "type": "string",
+            "pattern": "^\\d{6}$"
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -85,
+            "maximum": 85
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "label",
+          "recipient",
+          "phone",
+          "line1",
+          "locality",
+          "postalCode",
+          "latitude",
+          "longitude"
+        ]
+      },
+      "OrderInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "shopId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "paymentMethod": {
+            "default": "PICKUP",
+            "type": "string",
+            "enum": [
+              "PICKUP",
+              "COD",
+              "SIMULATED"
+            ]
+          },
+          "fulfillmentType": {
+            "default": "PICKUP",
+            "type": "string",
+            "enum": [
+              "PICKUP",
+              "DELIVERY"
+            ]
+          },
+          "quoteId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "packingPreferences": {
+            "default": "",
+            "type": "string",
+            "maxLength": 500
+          },
+          "items": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "variantId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1000000
+                }
+              },
+              "required": [
+                "variantId",
+                "quantity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "shopId",
+          "items"
+        ]
+      },
+      "ProductInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 150
+          },
+          "description": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "brand": {
+            "default": "",
+            "type": "string",
+            "maxLength": 100
+          },
+          "sku": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "barcode": {
+            "type": "string"
+          },
+          "catalogSource": {
+            "type": "string",
+            "enum": [
+              "OPENFOODFACTS",
+              "MANUAL"
+            ]
+          },
+          "keywords": {
+            "default": "",
+            "type": "string",
+            "maxLength": 500
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "PIECE",
+              "PACKET",
+              "KILOGRAM",
+              "GRAM",
+              "MILLILITER",
+              "LITER"
+            ]
+          },
+          "pricePaise": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000000
+          },
+          "stockMilli": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000000
+          },
+          "lowStockMilli": {
+            "default": 2000,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "label": {
+            "default": "Standard",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "name",
+          "categoryId",
+          "unit",
+          "pricePaise",
+          "stockMilli"
+        ]
+      },
+      "OfflineSaleInput": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "shopId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": [
+              "CASH",
+              "UPI",
+              "CARD"
+            ]
+          },
+          "items": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "variantId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 1000000
+                }
+              },
+              "required": [
+                "variantId",
+                "quantity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "shopId",
+          "paymentMethod",
+          "items"
+        ]
+      },
+      "Registration": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 128
+          },
+          "role": {
+            "default": "CUSTOMER",
+            "type": "string",
+            "enum": [
+              "CUSTOMER",
+              "MERCHANT"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "Login": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      }
+    }
+  }
+}
